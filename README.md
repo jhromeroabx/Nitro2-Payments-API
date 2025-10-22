@@ -84,6 +84,16 @@ Variables de entorno necesarias:
 
 ---
 
+## ☁️ **Flujo de Despliegue**
+
+- GitHub → build + push Docker → ECR.
+- ECS → ejecuta contenedor → puerto 8080.
+- ALB → escucha puerto 80 → redirige a Target Group (8080).
+- Security Group → abre puertos 80/8080 al público.
+- Load Balancer DNS → acceso externo → Vista Swagger.
+
+---
+
 ## 🧠 **Conceptos demostrados**
 
 - Arquitectura **reactiva no bloqueante** (WebFlux + R2DBC)

@@ -27,3 +27,9 @@ logging:
     org.springframework.r2dbc: DEBUG
     org.springframework.web: INFO
     org.springframework.r2dbc.core: DEBUG
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
