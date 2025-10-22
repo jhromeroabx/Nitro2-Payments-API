@@ -1,0 +1,28 @@
+spring:
+  r2dbc:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    properties:
+      ssl: true
+      sslMode: require
+  data:
+    r2dbc:
+      mapping:
+        naming-strategy: SNAKE_CASE
+  main:
+    web-application-type: reactive
+
+  # Para despliegue en AWS (usa variables de entorno)
+  datasource:
+    driver-class-name: org.postgresql.Driver
+
+server:
+  port: 8080
+
+logging:
+  level:
+    root: INFO
+    org.springframework.r2dbc: DEBUG
+    org.springframework.web: INFO
+    org.springframework.r2dbc.core: DEBUG
