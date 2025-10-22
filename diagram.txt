@@ -1,0 +1,77 @@
+@startuml Nitro2_Payments_Architecture
+title Nitro2 Payments - AWS ECS Fargate + ALB + ECR + Aiven PostgreSQL
+
+skinparam componentStyle rectangle
+skinparam wrapWidth 200
+skinparam maxMessageSize 100
+skinparam defaultTextAlignment center
+
+rectangle "GitHub\nActions (CI/CD)" as github
+node "Amazon ECR\naje/nitro2-payments" as ecr
+cloud "Internet\n(ALB DNS)" as internet
+
+package "AWS VPC" as vpc {
+  frame "Public Subnets" as pub {
+    [ALB\n(nitro2-lb:80)] as alb
+  }
+
+  frame "Private Subnets" as priv {
+    node "ECS Cluster\nnitro2-cluster" as ecs {
+      component "Service\nnitro2-service" as service
+      [Task (Fargate)\ncontainer: nitro2-payments:8080\n/health] as task
+    }
+  }
+
+  collections "Target Group\nnitro2-targets :8080\nHealthCheck: /health" as tg
+
+  database "CloudWatch Logs\n/ecs/nitro2-payments" as cw
+}
+
+cloud "Aiven PostgreSQL\npg-…aivencloud.com:16012\nDB: payments_aje\n(SSL)" as pg
+
+' Relaciones CI/CD
+github -down-> ecr : build & push image
+
+' Flujo de tráfico
+internet -down-> alb : HTTP :80
+alb -down-> tg : forward
+tg -down-> task : register/deregister (IP)
+
+' Dependencias de ejecución
+task -right-> pg : R2DBC SSL (16012)
+task -down-> cw : awslogs driver
+
+' Dependencias internas
+service -down-> task
+ecs -down-> service
+ecr -right-> task : pull image
+
+@enduml
+
+
+@startuml Request_and_HealthCheck
+title Request & Health Check Flow
+
+actor User
+participant "ALB" as ALB
+participant "Target Group" as TG
+participant "ECS Task\n(Spring Boot 8080)" as APP
+participant "Aiven PostgreSQL\n(SSL:16012)" as DB
+participant "CloudWatch Logs" as CW
+
+== Health Check ==
+ALB -> TG : Check targets
+TG -> APP : HTTP GET /health
+APP -> APP : Actuator HealthIndicator
+APP --> TG : 200 OK (healthy)
+
+== User Request ==
+User -> ALB : GET /api/users
+ALB -> TG : forward request
+TG -> APP : HTTP /api/users
+APP -> DB : query users (R2DBC)
+DB --> APP : rows
+APP -> CW : log request/metrics
+APP --> User : 200 OK [JSON]
+
+@enduml
