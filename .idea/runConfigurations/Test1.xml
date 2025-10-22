@@ -1,0 +1,24 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Test1" type="Application" factoryName="Application">
+    <envs>
+      <env name="DB_PASSWORD" value="AVNS_saIKDKJWdkjnltsiL_d" />
+      <env name="DB_URL" value="r2dbc:postgresql://avnadmin:AVNS_saIKDKJWdkjnltsiL_d@pg-teamokaren-jhosepromero14-dc28.l.aivencloud.com:16012/payments_aje?sslMode=require" />
+      <env name="DB_USERNAME" value="avnadmin" />
+    </envs>
+    <option name="MAIN_CLASS_NAME" value="org.example.Nitro2PaymentsApiApplication" />
+    <module name="Nitro2PaymentsAPI" />
+    <extension name="net.ashald.envfile">
+      <option name="IS_ENABLED" value="false" />
+      <option name="IS_SUBST" value="false" />
+      <option name="IS_PATH_MACRO_SUPPORTED" value="false" />
+      <option name="IS_IGNORE_MISSING_FILES" value="false" />
+      <option name="IS_ENABLE_EXPERIMENTAL_INTEGRATIONS" value="false" />
+      <ENTRIES>
+        <ENTRY IS_ENABLED="true" PARSER="runconfig" IS_EXECUTABLE="false" />
+      </ENTRIES>
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
