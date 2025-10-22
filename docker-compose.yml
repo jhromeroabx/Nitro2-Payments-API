@@ -1,0 +1,11 @@
+version: '3.9'
+services:
+  api:
+    build: .
+    container_name: nitro2
+    ports:
+      - "8080:8080"
+    environment:
+      DB_URL: r2dbc:postgresql://pg-teamokaren-jhosepromero14-dc28.l.aivencloud.com:16012/payments_aje?sslMode=require
+      DB_USERNAME: avnadmin
+      DB_PASSWORD: AVNS_saIKDKJWdkjnltsiL_d

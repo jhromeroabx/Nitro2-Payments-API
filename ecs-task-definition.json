@@ -1,0 +1,43 @@
+{
+  "family": "nitro2-payments-task",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "256",
+  "memory": "512",
+  "executionRoleArn": "arn:aws:iam::148761658682:role/ecsTaskExecutionRole",
+  "containerDefinitions": [
+    {
+      "name": "nitro2-payments",
+      "image": "148761658682.dkr.ecr.us-east-1.amazonaws.com/aje/nitro2-payments:latest",
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 8080,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        {
+          "name": "DB_URL",
+          "value": "r2dbc:postgresql://pg-teamokaren-jhosepromero14-dc28.l.aivencloud.com:16012/payments_aje?sslMode=require"
+        },
+        {
+          "name": "DB_USERNAME",
+          "value": "avnadmin"
+        },
+        {
+          "name": "DB_PASSWORD",
+          "value": "AVNS_saIKDKJWdkjnltsiL_d"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/nitro2-payments",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+      }
+    }
+  ]
+}
